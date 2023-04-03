@@ -15,6 +15,7 @@ Below are the steps to integrate the SDK:
    
   // Call InitializeWidgets method to render the iframe with call controls
   // "InitializeWidgets" method takes two parameters, first is your access token and second is the agent's username
+  
   softphone.InitializeWidgets("ODZmYjJiOGItZGE4YS00NjQ5LWE4MmMtZGI5NzZiOTM0YzY0", "sumit");
   
 5.The above code will render an iframe within the ic_widgetcontainer div.
