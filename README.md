@@ -27,10 +27,9 @@ Below are the steps to integrate the SDK:
   softphone.MakeCall(phone);
   
 
-#Below is complete code for a html file which integrates the websdk.
+## Below is complete code for a html file which integrates the websdk.
 
 <html>
-
 <head>
     <title>MyCrm</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -38,27 +37,18 @@ Below are the steps to integrate the SDK:
 
     <script src="./websdk/assets/dist/exotelsdk.js"></script>
     <script type="text/javascript" src="./websdk/assets/dist/SoftphoneSDK.js"></script>
-
 </head>
-
 <body>
-
     <div style="height:300px;width:500px;float:left;">
     <input type="text" id="phone" name="phone" placeholder="Enter Phone Number" style="width: 300px; height: 30px; border: 1px solid grey; border-radius: 5px; padding: 5px; margin: 5px;">
     <input type="button" id="call" name="call" value="Call" style="width: 100px; height: 30px; border: 1px solid grey; border-radius: 5px; padding: 5px; margin: 5px;">
     </div>
-
     <!--add this div to your html page, this will serve as place holder for rendering the iframe with various call controls -->
     <div id="ic_widgetcontainer" style="border: 1px solid grey;width: 500px;float: right;">
-
     </div>
-
 </body>
 <script>
-
     $(document).ready(function(){
-
-
         //create instance of softphone js
         var softphone = new SoftPhone(); 
         //call InitializeWidgets method to render the iframe with call controls
@@ -70,10 +60,7 @@ Below are the steps to integrate the SDK:
             var phone = $("#phone").val();
             softphone.MakeCall(phone);
         });
-
-
     });
 </script>
-
 </html>
 
