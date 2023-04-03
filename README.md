@@ -6,7 +6,7 @@ This project provides an easy-to-integrate SoftPhone SDK for web applications. T
 
 Below are the steps to integrate the SDK:
 
-1. Download the web SDK
+1. Download the WebSDK folder from this repository.
 2. Include the folder in wwwroot of your web project.
 3. Include the SoftPhoneSDK.js and crypto-js.min.js in the head of your page.
 4. Create an instance of SoftPhoneSDK using the below code: 
