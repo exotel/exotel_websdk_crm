@@ -29,6 +29,7 @@ Below are the steps to integrate the SDK:
 
 ## Below is complete code for a html file which integrates the websdk.
 
+```
 <html>
 <head>
     <title>MyCrm</title>
@@ -63,4 +64,5 @@ Below are the steps to integrate the SDK:
     });
 </script>
 </html>
+```
 
