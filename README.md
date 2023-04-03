@@ -11,12 +11,14 @@ Below are the steps to integrate the SDK:
 3. Include the SoftPhoneSDK.js and crypto-js.min.js in the head of your page.
 4. Create an instance of SoftPhoneSDK using the below code: 
 
+```
    var softphone = new SoftPhone(); 
    
   // Call InitializeWidgets method to render the iframe with call controls
   // "InitializeWidgets" method takes two parameters, first is your access token and second is the agent's username
   
   softphone.InitializeWidgets("ODZmYjJiOGItZGE4YS00NjQ5LWE4MmMtZGI5NzZiOTM0YzY0", "sumit");
+  ```
   
 5.The above code will render an iframe within the ic_widgetcontainer div.
 
@@ -24,7 +26,9 @@ Below are the steps to integrate the SDK:
 
 7.Call the below method for making an outbound call
 
+```
   softphone.MakeCall(phone);
+  ```
   
 
 ## Below is complete code for a html file which integrates the websdk.
