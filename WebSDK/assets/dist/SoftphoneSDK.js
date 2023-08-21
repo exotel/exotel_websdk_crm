@@ -1,18 +1,22 @@
 
-var baseurl = "https://integrationscore.us3.qaexotel.com";
-// var baseurl = "http://localhost:8080";
-var voipdomain = "voip.exotel.in";
+// version 1.2
+//***********voip config ******************* */
+var voipdomain = "voip.in1.exotel.com:5071";//veeno
 var voipdomain_sip = "voip.exotel.com";
+
+var baseurl = "https://integrationscore.mum1.exotel.com";
 
 // ========================= start of widgets ====================================
 
 var widgetContainer = $(`<div style="box-shadow: -5px 0 5px rgba(0, 0, 0, 0.5);"> <div id="ic_cbcontainer"></div> <div id="ic_widgetcontainer"> </div> </div>`);
+// //
+// var widget = $(`<iframe style="height:95vh;border: none;"  scrolling="no"  width="380"
+//                     id="icwidget" src="https://integrationscore.us3.qaexotel.com/v2/integrations/widgets" title="description"></iframe>`);
 
-var widget = $(`<iframe style="height:95vh;border: none;"  scrolling="no"  width="500"
-                    id="icwidget" src="https://integrationscore.us3.qaexotel.com/v2/integrations/widgets" title="description"></iframe>`);
+var widget = $(`<iframe style="height:95vh;border: none;"  scrolling="no"  width="380"
+                    id="icwidget" src="https://integrationscore.mum1.exotel.com/v2/integrations/widgets" title="description"></iframe>`);
 
-// var widget = $(`<iframe style="height:95vh;border: none;"  scrolling="no"  width="500"
-//                     id="icwidget" src="http://localhost:8080/v2/integrations/widgets" title="description"></iframe>`);
+
 
 var clickevents;
 
@@ -20,25 +24,15 @@ class widgets {
     constructor(showtoggle, _clickevents) {
 
         widgetContainer.appendTo('#callwidgetpanel');
-        // widget_toggle_sip.appendTo('#ic_cbcontainer');
-        // widget_toggle_device.appendTo('#ic_cbcontainer');baseurl
         widget.appendTo('#ic_widgetcontainer');
 
         clickevents = _clickevents;
-        // widget.hide();
-
-        // if (showtoggle) {
-        //     this.ShowToggleBox();
-        // }
-
         $('#sip-enabled').change(function () {
             if (this.checked) {
                 widget.show();
                 if (clickevents !== null) {
                     clickevents("register");
                 }
-                // var returnVal = confirm("Are you sure?");
-                // $(this).prop("checked", returnVal);
             } else {
                 widget.hide();
                 if (clickevents !== null) {
@@ -68,22 +62,13 @@ class widgets {
                 iframe.contentWindow.postMessage(creds, '*');
             });
         }
-        // document.getElementById('icwidget').contentWindow.postMessage(creds, "*");
+
     }
-
-    // ShowToggleBox() {
-    //     widget_toggle_sip.show();
-    //
-    // }
-    // HideToggleBox() {
-    //     widget_toggle_sip.hide();
-    // }
-
     RegisterPostmessageReceiver() {
         window.addEventListener("message", receiveMessage, false);
         function receiveMessage(event) {
             console.log("event received from " + event.origin);
-            console.log("message received in parent window --> " + event.data + event.origin); 
+            console.log("message received in parent window --> " + event.data + event.origin);
             if (event.origin !== "https://integrationscore.us3.qaexotel.com"){
                 console.log("not a authorized domain!");
                 // return;
@@ -125,20 +110,24 @@ var _SoftPhoneCallListenerCallback = null;
 var _SoftPhoneRegisterEventCallBack = null;
 var call = null;
 var exWebClient = null;
-var _accesstoken = "";
+// var _accesstoken = "";
 var _loggedinuserid = "";
 var sipAccountInfo = {};
 
 class IPPstnCall {
 
     //this constructor is invoked when called from ippstn.js,
-    constructor(accesstoken, loggedinuserid, autoconnectvoip,SoftPhoneRegisterEventCallBack = null, SoftPhoneCallListenerCallback = null) {
+    constructor(authtoken, loggedinuserid, autoconnectvoip,SoftPhoneRegisterEventCallBack = null, SoftPhoneCallListenerCallback = null) {
         $.ic_userid = loggedinuserid;
-        if($.ic_settingloaded !== true) {
-            this.LoadSettings(accesstoken);
-            this.LoadUserDetails(accesstoken, loggedinuserid);
+        //this might be the case if widgets are not useds
+        if($.ic_authtoken  === undefined){
+            $.ic_authtoken = authtoken;
         }
-        this.Initialize(accesstoken, loggedinuserid, autoconnectvoip,SoftPhoneRegisterEventCallBack,SoftPhoneCallListenerCallback);
+        if($.ic_settingloaded !== true) {
+            this.LoadSettings(authtoken);
+            this.LoadUserDetails(loggedinuserid);
+        }
+        this.Initialize(authtoken, loggedinuserid, autoconnectvoip,SoftPhoneRegisterEventCallBack,SoftPhoneCallListenerCallback);
 
     }
 
@@ -146,12 +135,14 @@ class IPPstnCall {
         _SoftPhoneCallListenerCallback = SoftPhoneCallListenerCallback;
         _SoftPhoneRegisterEventCallBack = SoftPhoneRegisterEventCallBack;
 
-        console.log("InitializeWidgets")
-        _accesstoken = accesstoken;
+        //debugger;
+        console.log("InitializeWidgets");
+        // _accesstoken = accesstoken;
         _loggedinuserid = loggedinuserid;
         this.PullUserDetailsWithSipInfo();
 
         exWebClient = new exotelSDK.ExotelWebClient();
+        console.log(sipAccountInfo);
         exWebClient.initWebrtc(sipAccountInfo, this.RegisterEventCallBack, this.CallListenerCallback, this.SessionCallback)
 
         if (autoconnectvoip) {
@@ -194,17 +185,15 @@ class IPPstnCall {
         //make a http call to get user details for "_loggedinuserid" and use accesstoken for auth
         // var sipInfo = JSON.parse(phone)[0]
         sipAccountInfo = {
-            'userName': $.ic_user.SipId.split(':')[1],// sipInfo.Username,
-            'authUser': $.ic_user.SipId.split(':')[1],//sipInfo.Username,
-            'sipdomain': $.ic_app.Data.ExotelAccountSid + "." + voipdomain_sip,//sipInfo.Domain,
-            'domain': voipdomain + ":443",// sipInfo.HostServer + ":" + sipInfo.Port,
-            // 'sipdomain': "ccplexopoc1m.voip.exotel.com",//sipInfo.Domain,
-            // 'domain': "voip.exotel.in:443",// sipInfo.HostServer + ":" + sipInfo.Port,
-            'displayname': $.ic_user.ExotelUserName,//sipInfo.DisplayName,
-            'secret': $.ic_user.SipSecret,//sipInfo.Password,
-            'port': "443",//sipInfo.Port,
-            'security': "wss",//sipInfo.Security,
-            'endpoint': "wss"//sipInfo.EndPoint
+            'userName': $.ic_user.SipId.split(':')[1],
+            'authUser': $.ic_user.SipId.split(':')[1],
+            'sipdomain': $.ic_app.Data.ExotelAccountSid + "." + voipdomain_sip,
+            'domain': voipdomain,
+            'displayname': $.ic_user.ExotelUserName,
+            'secret': $.ic_user.SipSecret,
+            'port': "5070",
+            'security': "wss",
+            'endpoint': "wss"
         };
         console.log("------------------sipAccountInfo------------------");
         console.log(sipAccountInfo);
@@ -235,7 +224,7 @@ class IPPstnCall {
             type: 'POST',
             url: baseurl + '/v2/integrations/call/outbound_call',
             dataType: 'json',
-            headers: {"Authorization":  _accesstoken , 'content-type': 'application/json'},
+            headers: {"Authorization":  $.ic_authtoken , 'content-type': 'application/json'},
             data: JSON.stringify(payload),
             async: true,
             success: function(data) {
@@ -267,6 +256,7 @@ class IPPstnCall {
     }
 
     toggleMuteButton() {
+        debugger;
         if (call) {
             call.Mute();
             _SoftPhoneCallListenerCallback("mutetoggle", call);
@@ -304,14 +294,15 @@ class IPPstnCall {
         });
     }
 
-    LoadUserDetails(appid,userid){
+    LoadUserDetails(userid){
         //load userdetails
         $.ajax({
-            url: baseurl + '/v2/integrations/usermapping?app_id=' + appid + "&user_id=" +  userid,
+            url: baseurl + '/v2/integrations/usermapping?user_id=' +  userid,
             dataType: 'json',
+            headers: {"Authorization":  $.ic_authtoken , 'content-type': 'application/json'},
             async: false,
             success: function(data) {
-                $.ic_user = data.Response;
+                $.ic_user = data.Data;
                 const key = '6368616e676520746869732070617373776f726420746f206120736563726574';
                 const ciphertext = $.ic_user.SipSecret;
                 const keyBytes = CryptoJS.enc.Hex.parse(key);
@@ -343,8 +334,9 @@ class SoftPhone {
     }
 
     InitializeWidgets(Authtoken , userid, autoconnectvoip = false) {
+        $.ic_authtoken = Authtoken;
         this.LoadSettings(Authtoken);
-        this.LoadUserDetails(Authtoken,userid);
+        this.LoadUserDetails(userid);
         $.ic_userid = userid;
         $.ic_settingloaded = true;
 
@@ -435,12 +427,13 @@ class SoftPhone {
             }
         });
     }
-    LoadUserDetails(appid,userid){
+    LoadUserDetails(userid){
         //load userdetails
         $.ajax({
-            url: baseurl + '/v2/integrations/usermapping?app_id=' + appid + "&user_id=" +  userid,
+            url: baseurl + '/v2/integrations/usermapping?user_id=' +  userid,
             dataType: 'json',
             async: false,
+            headers: {"Authorization":  $.ic_authtoken , 'content-type': 'application/json'},
             success: function(data) {
                 $.ic_user = data.Data;
                 const key = '6368616e676520746869732070617373776f726420746f206120736563726574';
@@ -458,15 +451,4 @@ class SoftPhone {
         });
     }
 }
-//
-// function SetupPositions(position){
-//     if (position === "BottomRight"){
-//         $("#togglewidget").css({'bottom':'1%','top':''});
-//         return;
-//     }
-//     if (position === "TopRight"){
-//         $("#togglewidget").css({'top':'1%','bottom':''});
-//         return;
-//     }
-// }
 //============================= end of softphone ======================================
