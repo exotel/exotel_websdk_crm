@@ -122,12 +122,9 @@ Below are the steps to integrate the SDK:
             console.log('=====PhoneRegisterEventCallBack==========');
             console.log('%c ' + a, 'background: #222; color: #bada55');
         }
-
-
-        // var ippstncall = new IPPstnCall("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImRlOWUxZmM0LTYxMWYtNDU0Mi05ZWRlLWRjMzFmOWI1NzFiZiIsImV4cCI6MTY5ODY3NTMxNH0.c_RJdsZccwXd431lExS-PSrdsu-EYmWcxxGWPyssdIU",
-        //     "SumitSagar", true, PhoneRegisterEventCallBack, PhoneCallListenerCallback);
-        var ippstncall = new IPPstnCall("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjgxMTc0NDI3LTc5NTgtNDFkYi05MzI5LTU3YzQyYTNlNjQ0NSIsImV4cCI6MTcxMDA1MTk5Mn0.9E9YWOD6EMbr13MnjlKvOyezsY53FYzGE6T60gjauYY",
-            "sumitexotel133m", true, PhoneRegisterEventCallBack, PhoneCallListenerCallback);
+ 
+        var ippstncall = new IPPstnCall("<token>",
+            "<appuserid>", true, PhoneRegisterEventCallBack, PhoneCallListenerCallback);
 
         //now call register device to resgister
         ippstncall.RegisterDevice();
