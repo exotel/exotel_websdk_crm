@@ -31,7 +31,7 @@ Below are the steps to integrate the SDK:
   ```
   
 
-## Below is complete code for a html file which integrates the websdk.
+## Below is complete code for a html file which integrates the websdk and Loads a UI for using the call Functionality.
 
 ```
 <html>
@@ -67,6 +67,99 @@ Below are the steps to integrate the SDK:
         });
     });
 </script>
+</html>
+```
+
+## Below is complete code for a html file which integrates the websdk and emits events to callback functions, this can be used to build your own UI and integrated the calling functionality via SDK.
+
+```
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CRM Application</title>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+
+    <!-- //websdk -->
+    <script type="text/javascript" src="https://integrationscore.mum1.exotel.com/public/websdk/assets/dist/exotelsdk.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script type="text/javascript" src="./public/websdk/js/SoftphoneSDK.js"></script> 
+
+
+</head>
+
+<body>
+    <header>SDK Demo Application</header>
+    </br>
+    Device status : <div id="devicestatus" style="color: blue;"></div>
+    </br>
+    </br>
+    <input type="text" id="phone" placeholder="Enter Phone Number" value="">
+    <button onclick="Call()">Call</button>
+    </br>
+    </br>
+    <button onclick="AcceptCall()">Accept Call</button>
+    <button onclick="RejectCall()">Reject Call</button>
+    <button onclick="ToggleMute()">Mute Call</button>
+    <button onclick="ToggleHold()">Hold Call</button>
+    <div id="" style="margin-top: 100px;">logs</div>
+    <div id="log" style="margin-top: 10px;">-----</div>
+</body>
+<script>
+    $(document).ready(function () {
+        //******************** - use only events , not the UI widgets ************** 
+        function PhoneCallListenerCallback(a,b) {  
+            debugger;
+            console.log('=====PhoneCallListenerCallback==========');
+            console.log('%c ' + a, 'background: #222; color: #bada55');
+        }
+        function PhoneRegisterEventCallBack(a) {
+            // alert(a);
+            $('#devicestatus').html(a);
+            // $("#log").html(a);
+            console.log('=====PhoneRegisterEventCallBack==========');
+            console.log('%c ' + a, 'background: #222; color: #bada55');
+        }
+
+
+        // var ippstncall = new IPPstnCall("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6ImRlOWUxZmM0LTYxMWYtNDU0Mi05ZWRlLWRjMzFmOWI1NzFiZiIsImV4cCI6MTY5ODY3NTMxNH0.c_RJdsZccwXd431lExS-PSrdsu-EYmWcxxGWPyssdIU",
+        //     "SumitSagar", true, PhoneRegisterEventCallBack, PhoneCallListenerCallback);
+        var ippstncall = new IPPstnCall("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjgxMTc0NDI3LTc5NTgtNDFkYi05MzI5LTU3YzQyYTNlNjQ0NSIsImV4cCI6MTcxMDA1MTk5Mn0.9E9YWOD6EMbr13MnjlKvOyezsY53FYzGE6T60gjauYY",
+            "sumitexotel133m", true, PhoneRegisterEventCallBack, PhoneCallListenerCallback);
+
+        //now call register device to resgister
+        ippstncall.RegisterDevice();
+        $.ippstncall = ippstncall;
+        //end of code         
+    });
+
+    function MakeCallCallback(callbackmessage, data) {
+        // alert("Click to call respon se -> " + callbackmessage);
+        //alert("API : " + callbackmessage + " Response : " + JSON.stringify(data));
+        $("#log").html("API : " + callbackmessage + " Response : " + JSON.stringify(data));
+    }
+    function Call() {
+        var phone = $("#phone").val();
+        $.ippstncall.MakeCall(phone, MakeCallCallback);
+    }
+
+    function ToggleHold() {
+        $.ippstncall.toggleHoldButton();
+    }
+    function ToggleMute() {
+        $.ippstncall.toggleMuteButton();
+    }
+    function RejectCall() {
+        $.ippstncall.rejectCall();
+    }
+    function AcceptCall() {
+        $.ippstncall.acceptCall();
+    }
+
+</script>
+
 </html>
 ```
 
