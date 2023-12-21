@@ -256,7 +256,7 @@ class IPPstnCall {
     }
 
     toggleMuteButton() {
-        debugger;
+        //debugger;
         if (call) {
             call.Mute();
             _SoftPhoneCallListenerCallback("mutetoggle", call);
