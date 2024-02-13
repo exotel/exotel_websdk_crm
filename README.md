@@ -122,11 +122,17 @@ Below are the steps to integrate the SDK:
             console.log('=====PhoneRegisterEventCallBack==========');
             console.log('%c ' + a, 'background: #222; color: #bada55');
         }
- 
-        var ippstncall = new IPPstnCall("<token>",
-            "<appuserid>", true, PhoneRegisterEventCallBack, PhoneCallListenerCallback);
 
-        //now call register device to resgister
+         /*"token", // Authorization token for the IPPstnCall service generated through token api using entity as app
+           "appuserid", // String: Unique identifier for the app user making the call
+           "autoconnectvoip", // Boolean: Indicates whether to auto register the sip 
+           "PhoneRegisterEventCallBack", // Function: Callback to handle phone registration events
+           "PhoneCallListenerCallback",  // Function: Callback to handle phone call events
+         */
+        var ippstncall = new IPPstnCall("<token>",
+            "<appuserid>", false, PhoneRegisterEventCallBack, PhoneCallListenerCallback);
+
+        //now call register device to resgister only when autoconnectvoip is set to false
         ippstncall.RegisterDevice();
         $.ippstncall = ippstncall;
         //end of code         
