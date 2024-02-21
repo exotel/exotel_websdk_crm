@@ -1,5 +1,5 @@
 
-// version 1.2
+// version 1.3
 //***********voip config ******************* */
 var voipdomain = "voip.in1.exotel.com:5071";//veeno
 var voipdomain_sip = "voip.exotel.com";
@@ -211,6 +211,13 @@ class IPPstnCall {
         }
     }
 
+    checkClientStatus(callback) {
+        exWebClient.checkClientStatus(function(status) {
+            console.log("SDK Status " + status);
+            callback(status);
+        });
+    }
+
     MakeCall(number, callback) {
         let payload = {
             "customer_id": $.ic_user.customer_id,
@@ -256,7 +263,7 @@ class IPPstnCall {
     }
 
     toggleMuteButton() {
-        //debugger;
+        debugger;
         if (call) {
             call.Mute();
             _SoftPhoneCallListenerCallback("mutetoggle", call);
@@ -383,6 +390,50 @@ class SoftPhone {
 
         ippstncall = new IPPstnCall(Authtoken, userid, autoconnectvoip, SoftPhoneRegisterEventCallBack, SoftPhoneCallListenerCallback);
 
+    }
+
+    MakeCallCallback(status, callback, number) {
+        if (status === "Registered") {
+            this.MakeCall(number, callback);
+        }else {
+            //switch case and return callCall("Error", "Error Msg");
+            //console.log("Status is: " + status);
+            // Dictionary to map status codes to descriptions
+            const errorDescriptions = {
+                "media_permission_denied": "Media permission not given",
+                "not_initialized": "sdk is not initialized",
+                "websocket_connection_failed": "WebSocket connection is failing, due to network connectivity",
+                "Disconnected": "websocket is not connected",
+                "Unregistered": "either your credential is invalid or registration keep alive failed",
+                "Terminated": "either your credential is invalid or registration keep alive failed",
+                "Initial": "sdk registration is progress",
+                "Registered": "ready",
+                "unknown": "something went wrong",
+                "Connecting": "Trying to connect the websocket",
+            };
+            // Check if the error code exists in the errorDescriptions object
+            if (errorDescriptions.hasOwnProperty(status)) {
+                // Get the description based on the status code
+                var description = errorDescriptions[status];
+            } else {
+                // If the error code doesn't exist, default to "Unknown" and log a message
+                console.log("Unknown status code:", status);
+                var description = "Unknown";
+            }
+            var errorData = {
+                "Response": {
+                    "code": status,
+                    "description": description
+                }
+            }
+            callback("failed", errorData);
+        }
+    }
+
+    MakeCallwithStatus(number, callback) {
+        ippstncall.checkClientStatus(function(status){
+            $.softphone.MakeCallCallback(status, callback, number);
+        });
     }
 
     //if this method is called, this mean customer is using widgets tool, so we neet to pass message to iframe about call
