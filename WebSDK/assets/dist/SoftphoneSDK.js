@@ -394,13 +394,11 @@ class SoftPhone {
 
     MakeCallCallback(status, callback, number) {
         if (status === "Registered") {
-            this.MakeCall(number, callback);
+            this.MakeCallHelper(number, callback);
         }else {
-            //switch case and return callCall("Error", "Error Msg");
-            //console.log("Status is: " + status);
             // Dictionary to map status codes to descriptions
             const errorDescriptions = {
-                "media_permission_denied": "Media permission not given",
+                "media_permission_denied": "either media device not available, or permission not given",
                 "not_initialized": "sdk is not initialized",
                 "websocket_connection_failed": "WebSocket connection is failing, due to network connectivity",
                 "Disconnected": "websocket is not connected",
@@ -430,7 +428,7 @@ class SoftPhone {
         }
     }
 
-    MakeCallwithStatus(number, callback) {
+    MakeCall(number, callback) {
         ippstncall.checkClientStatus(function(status){
             $.softphone.MakeCallCallback(status, callback, number);
         });
@@ -438,7 +436,7 @@ class SoftPhone {
 
     //if this method is called, this mean customer is using widgets tool, so we neet to pass message to iframe about call
     //direction
-    MakeCall(phoneno,callback){
+    MakeCallHelper(phoneno,callback){
         ippstncall.MakeCall(phoneno,(message,data) => {
             //this is need to update call direction text in iframe widgets
             var data = {"event" :"c2ccalltriggered" ,"phoneno": phoneno};
