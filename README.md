@@ -138,13 +138,14 @@ Below are the steps to integrate the SDK:
         //end of code         
     });
 
+   // Check Status Code section for detailed code and description
     function OutboundResponse(status, message) {
-        alert(status + " " + JSON.stringify(message));
+        alert(status + " " + JSON.stringify(message))
     }
 
     function Call() {
         var phone = $("#phone").val();
-        $.ippstncall.MakeCallWrapper(phone, OutboundResponse)
+        $.ippstncall.MakeCall(phone, OutboundResponse)
     }
 
     function ToggleHold() {
