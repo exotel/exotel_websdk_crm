@@ -168,15 +168,15 @@ Below are the steps to integrate the SDK:
 
 # Status Code:
 
-| Scenario |  code    | description |
-| :---:   | :---: | :---: |
-| when media permission is not given | media_permission_denied   | either media device not available, or permission not given   |
-| when sdk is not initialized | not_initialized   | sdk is not initialized   |
-| when websocket connection is fail | websocket_connection_failed   | WebSocket connection is failing, due to network connectivity   |
-| when user registration failed | Unregistered, Terminated   | either your credential is invalid or registration keep alive failed   |
-| after websocket connected, registration inprogress for the very first time | Initial   | sdk registration is progress   |
-| when media permission given, websocket connection established, and user registration also suceeded | Registered   | ready   |
-| if something went wrong | unknown   | something went wrong   |
-| if webrtc is unregistered intentionally | Disconnected   | websocket is not connected   |
-| if webrtc is trying to connection and websocket connection establishment is in progress | Connecting   | Trying to connect the websocket   |
+|  Event    | Event Description |
+| :---: | :---: |
+| media_permission_denined   | either media device not available, or permission not given   |
+| not_intialized   | sdk is not initialized   |
+| websocket_connection_failed   | websocket connection is failing, due to network connectivity   |
+| unregistered, terminated   | either your credential is invalid or registration keep alive failed   |
+| initial   | sdk registration is progress   |
+| registered   | ready   |
+| unknown   | something went wrong   |
+| disconnected   | websocket is not connected   |
+| connecting   | Trying to connect the websocket   |
 
