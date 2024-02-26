@@ -393,7 +393,7 @@ class SoftPhone {
     }
 
     MakeCallCallback(status, callback, number) {
-        if (status === "Registered") {
+        if (status === "registered") {
             this.MakeCallHelper(number, callback);
         }else {
             // Dictionary to map status codes to descriptions
