@@ -401,13 +401,13 @@ class SoftPhone {
                 "media_permission_denied": "either media device not available, or permission not given",
                 "not_initialized": "sdk is not initialized",
                 "websocket_connection_failed": "WebSocket connection is failing, due to network connectivity",
-                "Disconnected": "websocket is not connected",
-                "Unregistered": "either your credential is invalid or registration keep alive failed",
-                "Terminated": "either your credential is invalid or registration keep alive failed",
-                "Initial": "sdk registration is progress",
-                "Registered": "ready",
+                "disconnected": "websocket is not connected",
+                "unregistered": "either your credential is invalid or registration keep alive failed",
+                "terminated": "either your credential is invalid or registration keep alive failed",
+                "initial": "sdk registration is progress",
+                "registered": "ready",
                 "unknown": "something went wrong",
-                "Connecting": "Trying to connect the websocket",
+                "connecting": "Trying to connect the websocket",
             };
             // Check if the error code exists in the errorDescriptions object
             if (errorDescriptions.hasOwnProperty(status)) {
