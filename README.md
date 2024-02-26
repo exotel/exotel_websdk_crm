@@ -170,8 +170,8 @@ Below are the steps to integrate the SDK:
 
 |  Event    | Event Description |
 | :---: | :---: |
-| media_permission_denined   | either media device not available, or permission not given   |
-| not_intialized   | sdk is not initialized   |
+| media_permission_denied   | either media device not available, or permission not given   |
+| not_initialized   | sdk is not initialized   |
 | websocket_connection_failed   | websocket connection is failing, due to network connectivity   |
 | unregistered, terminated   | either your credential is invalid or registration keep alive failed   |
 | initial   | sdk registration is progress   |
