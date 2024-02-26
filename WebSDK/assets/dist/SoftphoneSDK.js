@@ -416,7 +416,7 @@ class SoftPhone {
             } else {
                 // If the error code doesn't exist, default to "Unknown" and log a message
                 console.log("Unknown status code:", status);
-                var description = "Unknown";
+                var description = "unknown";
             }
             var errorData = {
                 "Response": {
