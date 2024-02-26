@@ -400,12 +400,12 @@ class SoftPhone {
             const errorDescriptions = {
                 "media_permission_denied": "either media device not available, or permission not given",
                 "not_initialized": "sdk is not initialied",
-                "websocket_connection_failed": "WebSocket connection is failing, due to network connectivity",
+                "websocket_connection_failed": "websocket connection is failing, due to network connectivity",
                 "disconnected": "websocket is not connected",
                 "unregistered": "either your credential is invalid or registration keep alive failed",
                 "terminated": "either your credential is invalid or registration keep alive failed",
                 "initial": "sdk registration is progress",
-                "registered": "ready",
+                "registered": "Ready to receive the calls",
                 "unknown": "something went wrong",
                 "connecting": "Trying to connect the websocket",
             };
