@@ -399,7 +399,7 @@ class SoftPhone {
             // Dictionary to map status codes to descriptions
             const errorDescriptions = {
                 "media_permission_denied": "either media device not available, or permission not given",
-                "not_initialized": "sdk is not initialized",
+                "not_initialized": "sdk is not initialied",
                 "websocket_connection_failed": "WebSocket connection is failing, due to network connectivity",
                 "disconnected": "websocket is not connected",
                 "unregistered": "either your credential is invalid or registration keep alive failed",
