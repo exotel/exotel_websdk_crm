@@ -168,7 +168,7 @@ Below are the steps to integrate the SDK:
 
 # Status Code:
 
-|  Event    | Event Description |
+|  status    | message |
 | :---: | :---: |
 | media_permission_denied   | either media device not available, or permission not given   |
 | not_initialized   | sdk is not intialied   |
