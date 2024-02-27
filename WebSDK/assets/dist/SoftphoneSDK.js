@@ -246,7 +246,8 @@ class IPPstnCall {
                 console.log(textStatus);
                 console.log(error);
                 if(callback !== null && callback !== undefined) {
-                    callback("failed", error);
+                    var errorMessage = JSON.parse(xhr.responseJSON.Error);
+                    callback("failed", errorMessage);
                 }
             }
         });
