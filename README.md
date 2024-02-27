@@ -138,7 +138,7 @@ Below are the steps to integrate the SDK:
         //end of code         
     });
 
-   // Check Status Code section for detailed code and description
+    // Check the `SDK Initialization and User Registration Error Messages` section below for the list of statuses and messages.
     function OutboundResponse(status, message) {
         alert(status + " " + JSON.stringify(message))
     }
@@ -166,7 +166,8 @@ Below are the steps to integrate the SDK:
 </html>
 ```
 
-# Status Code:
+# SDK Initialization and User Registration Error Messages:
+The following statuses and messages are thrown before initiating a call. You can handle these errors in the OutboundResponse function. 
 
 |  status    | message |
 | :---: | :---: |
