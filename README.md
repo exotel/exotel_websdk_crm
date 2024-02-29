@@ -139,8 +139,12 @@ Below are the steps to integrate the SDK:
     });
 
     // Check the `SDK Initialization and User Registration Error Messages` section below for the list of statuses and messages.
-    function OutboundResponse(status, message) {
-        alert(status + " " + JSON.stringify(message))
+    function OutboundResponse(error, data) {
+        if (error !== null){
+            alert("Error: " + error.description)
+        } else {
+            alert("Call initiated with Id: " + JSON.stringify(data.Data.CallSid))
+        }
     }
 
     function Call() {
@@ -169,8 +173,9 @@ Below are the steps to integrate the SDK:
 # SDK Initialization and User Registration Error Messages:
 The following statuses and messages are thrown before initiating a call. You can handle these errors in the OutboundResponse function. 
 
-|  status    | message |
+|  code    | description |
 | :---: | :---: |
+| make_call_api_error   | make call api error   |
 | media_permission_denied   | either media device not available, or permission not given   |
 | not_initialized   | sdk is not intialied   |
 | websocket_connection_failed   | websocket connection is failing, due to network connectivity   |
