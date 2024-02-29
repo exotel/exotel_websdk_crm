@@ -114,6 +114,21 @@ var exWebClient = null;
 var _loggedinuserid = "";
 var sipAccountInfo = {};
 
+// Dictionary to map status codes to descriptions
+ const errorDescriptions = {
+    "make_call_api_error": "make call api error",
+    "media_permission_denied": "either media device not available, or permission not given",
+    "not_initialized": "sdk is not initialied",
+    "websocket_connection_failed": "websocket connection is failing, due to network connectivity",
+    "disconnected": "websocket is not connected",
+    "unregistered": "either your credential is invalid or registration keep alive failed",
+    "terminated": "either your credential is invalid or registration keep alive failed",
+    "initial": "sdk registration is progress",
+    "registered": "Ready to receive the calls",
+    "unknown": "something went wrong",
+    "connecting": "Trying to connect the websocket",
+};
+
 class IPPstnCall {
 
     //this constructor is invoked when called from ippstn.js,
@@ -235,23 +250,41 @@ class IPPstnCall {
             data: JSON.stringify(payload),
             async: true,
             success: function(data) {
-                console.log("Success make call : ", data);
-                if(callback !== null && callback !== undefined) {
-                    callback("success", data);
-
+                if(callback == null || callback == undefined) {
+                    return
                 }
+                callback(null, data);
             },
             error: function(xhr, textStatus, error){
-                console.log(xhr.statusText);
-                console.log(textStatus);
-                console.log(error);
-                if(callback !== null && callback !== undefined) {
-                    var errorMessage = JSON.parse(xhr.responseJSON.Error);
-                    callback("failed", errorMessage);
+                if(callback == null || callback == undefined){
+                    return
                 }
+                if (xhr.statusText == "error" && Object.hasOwn(xhr.responseJSON, false)){
+                    callback(
+                        {
+                            code: errorDescriptions.make_call_api_error,
+                            description: `http code: ${xhr.status}, error: ${xhr.responseText}`
+                        }, null)
+                    return
+                }
+                try{
+                    var errorResponse = JSON.parse(xhr.responseJSON.Error);
+                } catch(error){
+                    callback(
+                        {
+                            code: errorDescriptions.make_call_api_error,
+                            description: `http code: ${xhr.status}, error: ${error.message}`
+                        }, null)
+                    return
+                }
+                callback(
+                    {
+                        code: errorDescriptions.make_call_api_error,
+                        description: `http code: ${errorResponse.http_code}, error: ${errorResponse.response.error_data.code + " : " + errorResponse.response.error_data.message + " : " + errorResponse.response.error_data.description}`
+                    }, null)
+                return
             }
         });
-
     }
 
     toggleHoldButton() {
@@ -397,19 +430,6 @@ class SoftPhone {
         if (status === "registered") {
             this.MakeCallHelper(number, callback);
         }else {
-            // Dictionary to map status codes to descriptions
-            const errorDescriptions = {
-                "media_permission_denied": "either media device not available, or permission not given",
-                "not_initialized": "sdk is not initialied",
-                "websocket_connection_failed": "websocket connection is failing, due to network connectivity",
-                "disconnected": "websocket is not connected",
-                "unregistered": "either your credential is invalid or registration keep alive failed",
-                "terminated": "either your credential is invalid or registration keep alive failed",
-                "initial": "sdk registration is progress",
-                "registered": "Ready to receive the calls",
-                "unknown": "something went wrong",
-                "connecting": "Trying to connect the websocket",
-            };
             // Check if the error code exists in the errorDescriptions object
             if (errorDescriptions.hasOwnProperty(status)) {
                 // Get the description based on the status code
@@ -420,15 +440,13 @@ class SoftPhone {
                 var description = "unknown";
             }
             var errorData = {
-                "Response": {
                     "code": status,
                     "description": description
-                }
-            }
-            callback("failed", errorData);
+                    }
+            callback(errorData, null);
         }
     }
-
+  
     MakeCall(number, callback) {
         ippstncall.checkClientStatus(function(status){
             $.softphone.MakeCallCallback(status, callback, number);
