@@ -263,7 +263,7 @@ class IPPstnCall {
                     callback(
                         {
                             code: errorDescriptions.make_call_api_error,
-                            description: `http code: ${xhr.status}, error: ${xhr.responseText}`
+                            description: `http code: ${xhr.status};; ${xhr.responseText}`
                         }, null)
                     return
                 }
@@ -273,14 +273,14 @@ class IPPstnCall {
                     callback(
                         {
                             code: errorDescriptions.make_call_api_error,
-                            description: `http code: ${xhr.status}, error: ${error.message}`
+                            description: `http code: ${xhr.status};; ${error.message}`
                         }, null)
                     return
                 }
                 callback(
                     {
                         code: errorDescriptions.make_call_api_error,
-                        description: `http code: ${errorResponse.http_code}, error: ${errorResponse.response.error_data.code + " : " + errorResponse.response.error_data.message + " : " + errorResponse.response.error_data.description}`
+                        description: `http_code: ${errorResponse.http_code}; error_code: ${errorResponse.response.error_data.code}; ${errorResponse.response.error_data.message + " : " + errorResponse.response.error_data.description}`
                     }, null)
                 return
             }
