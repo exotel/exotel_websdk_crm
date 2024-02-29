@@ -138,7 +138,7 @@ Below are the steps to integrate the SDK:
         //end of code         
     });
 
-    // Check the `SDK Initialization and User Registration Error Messages` section below for the list of statuses and messages.
+    // Check the `Outbound Response - Possible Errors and Success Format` section below for possible values
     function OutboundResponse(error, data) {
         if (error !== null){
             alert("Error: " + error.description)
@@ -170,12 +170,54 @@ Below are the steps to integrate the SDK:
 </html>
 ```
 
-# SDK Initialization and User Registration Error Messages:
-The following statuses and messages are thrown before initiating a call. You can handle these errors in the OutboundResponse function. 
+# Outbound Response - Possible Errors and Success Format
+The following statuses and messages are thrown before initiating a call. They could be during SDK initialization, user registration, or errors related to call failures. You can handle these errors in the OutboundResponse function. 
 
+OutboundResponse(error, data)
+* error - Will be null in case of a successful call. JSON of the following structure
+```
+  {
+     "code": status,
+     "description": description
+  }
+```
+ Possible values of code and description are provided in the below table.
+ 
+* data - Will contain the following structure in case of a successful call -
+```
+  {
+    "RequestId": "4edcd5c3-9234-454f-b775-fc42a1df61c8",
+    "Status": "Success",
+    "Code": 200,
+    "Error": "",
+    "Data": {
+        "CustomerId": "293a0196-3ad6-491b-b39d-3533560b9XXX",
+        "AppId": "91175427-7958-41db-9329-57c42a3e6XXX",
+        "CallSid": "159c13f6b9615219ecdbe170aa1f182t",
+        "ExotelAccountSid": "<account_sid>",
+        "DialWhomNumber": "8851029024",
+        "AppUserID": "e17b0d1b8b8e447d9e06659507013d40",
+        "VirtualNumber": "08069891509",
+        "Direction": "outbound",
+        "CallStatus": "",
+        "CallState": "active",
+        "ToNumber": "8851029024",
+        "FromNumber": "sip:chiragsd698753c",
+        "TotalDuration": 0,
+        "CallRecordings": "",
+        "AccountDomain": "mumbai",
+        "TicketId": "",
+        "CallDetail": null,
+        "CreatedAt": "0001-01-01T00:00:00Z",
+        "UpdatedAt": "0001-01-01T00:00:00Z"
+    }
+}
+```
+
+Possible Error codes and descriptions - 
 |  code    | description |
 | :---: | :---: |
-| make_call_api_error   | make call api error   |
+| make_call_api_error   | Example - `http code: 400; error_code: 10725; Invalid request body,failed parsing :  to to.contact_uri is invalid`  |
 | media_permission_denied   | either media device not available, or permission not given   |
 | not_initialized   | sdk is not intialied   |
 | websocket_connection_failed   | websocket connection is failing, due to network connectivity   |
