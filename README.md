@@ -217,7 +217,7 @@ OutboundResponse(error, data)
 Possible Error codes and descriptions - 
 |  code    | description |
 | :---: | :---: |
-| make_call_api_error   | Example - `http code: 400; error_code: 10725; Invalid request body,failed parsing :  to to.contact_uri is invalid`  |
+| make_call_api_error   | Example - `http_code: 400; error_code: 10725; Invalid request body,failed parsing :  to to.contact_uri is invalid` Split this string by ";" to get the http_code, error_code and the third part of the string is the error message. Refer to [this](https://developer.exotel.com/api/product-voice-version-3) table for a list of all http_code and error_code values.  |
 | media_permission_denied   | either media device not available, or permission not given   |
 | not_initialized   | sdk is not intialied   |
 | websocket_connection_failed   | websocket connection is failing, due to network connectivity   |
