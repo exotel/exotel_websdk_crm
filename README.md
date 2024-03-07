@@ -223,7 +223,6 @@ Possible Error codes and descriptions -
 | websocket_connection_failed   | websocket connection is failing, due to network connectivity   |
 | unregistered, terminated   | either your credential is invalid or registration keep alive failed   |
 | initial   | sdk registration is progress   |
-| registered   | ready   |
 | unknown   | something went wrong   |
 | disconnected   | websocket is not connected   |
 | connecting   | Trying to connect the websocket   |
