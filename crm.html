@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CRM Application</title>
+
+ 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+
+    <!-- //websdk -->
+    <script type="text/javascript" src="./assets/dist/exotelsdk.js"></script>
+    <script type="text/javascript" src="./js/SoftphoneSDK.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
+    
+     
+</head> 
+<body> 
+<header>SDK Demo Application</header> 
+</br>
+ Device status : <div id="devicestatus" style="color: blue;"></div> 
+</br>
+</br>
+<input type="text" id="phone" placeholder="Enter Phone Number" value="">
+<button onclick="Call()">Call</button>
+</br>
+</br>
+<button onclick="AcceptCall()">Accept Call</button>
+<button onclick="RejectCall()">Reject Call</button>
+<button onclick="ToggleMute()">Mute Call</button>
+<button onclick="ToggleHold()">Hold Call</button>
+</body> 
+<script>
+    $(document).ready(function () {
+        //******************** - use only events , not the UI widgets ************** 
+        function PhoneCallListenerCallback(a) {
+            alert(a);
+            console.log('=====PhoneCallListenerCallback==========');
+            console.log('%c ' + a, 'background: #222; color: #bada55');
+        }
+        function PhoneRegisterEventCallBack(a) {
+            //alert(a);
+            $('#devicestatus').html(a);
+            console.log('=====PhoneRegisterEventCallBack==========');
+            console.log('%c ' + a, 'background: #222; color: #bada55');
+        }
+
+         
+        var ippstncall = new IPPstnCall("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjkxMTc1NDI3LTc5NTgtNDFkYi05MzI5LTU3YzQyYTNlNmY0NSIsImV4cCI6MTcxNzY2MzEzOH0.kgZzceHbyCiLtDzDNSzw6Fl6XIU62OUST2QgwlRd4ts",
+            "2733b4b05fc743bfacf4af0ea9bc0f43", true, PhoneRegisterEventCallBack, PhoneCallListenerCallback);
+
+        //now call register device to resgister only when autoconnectvoip is set to false
+        //ippstncall.RegisterDevice();
+        $.ippstncall = ippstncall;
+        //end of code         
+    });
+
+    function OutboundResponse(error, data) {
+        if (error !== null){
+            alert("Error: " + error.description)
+        } else {
+            alert("Call initiated with Id: " + JSON.stringify(data.Data.CallSid))
+        }
+    }
+
+    function Call() {
+        var phone = $("#phone").val();
+        //callback check
+        $.ippstncall.MakeCall(phone, OutboundResponse)
+        console.log('=================Inside Call 64 =============');
+    }
+
+    function ToggleHold() {
+        $.ippstncall.toggleHoldButton();
+    }
+    function ToggleMute() {
+        $.ippstncall.toggleMuteButton();
+    }
+    function RejectCall() {
+        $.ippstncall.rejectCall();
+    }
+    function AcceptCall() {
+        $.ippstncall.acceptCall();
+    }
+
+</script>
+</html>
