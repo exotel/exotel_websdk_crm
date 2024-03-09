@@ -45,11 +45,10 @@
         }
 
          
-        var ippstncall = new IPPstnCall("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJJZCI6IjkxMTc1NDI3LTc5NTgtNDFkYi05MzI5LTU3YzQyYTNlNmY0NSIsImV4cCI6MTcxNzY2MzEzOH0.kgZzceHbyCiLtDzDNSzw6Fl6XIU62OUST2QgwlRd4ts",
-            "2733b4b05fc743bfacf4af0ea9bc0f43", true, PhoneRegisterEventCallBack, PhoneCallListenerCallback);
+        var ippstncall = new IPPstnCall("{your_app_token}",
+            "{your_appUserId}", true, PhoneRegisterEventCallBack, PhoneCallListenerCallback);
 
         //now call register device to resgister only when autoconnectvoip is set to false
-        //ippstncall.RegisterDevice();
         $.ippstncall = ippstncall;
         //end of code         
     });
@@ -66,7 +65,6 @@
         var phone = $("#phone").val();
         //callback check
         $.ippstncall.MakeCall(phone, OutboundResponse)
-        console.log('=================Inside Call 64 =============');
     }
 
     function ToggleHold() {
