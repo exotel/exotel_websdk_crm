@@ -65,10 +65,21 @@ Steps to integrate the SDK:
         //"InitializeWidgets" method takes two parameters, first is your accesstoke and second is agent's username
         softphone.InitializeWidgets("ODZmYjJiOGItZGE4YS00NjQ5LWE4MmMtZGI5NzZiOTM0YzY0", "sumit");
 
+        // Check the `Outbound Response - Possible Errors and Success Format` section below for possible values
+        function OutboundResponse(error, data) {
+            if (error !== null){
+                alert("Error: " + error.description)
+            } else {
+                alert("Call initiated with Id: " + JSON.stringify(data.Data.CallSid))
+            }
+        }
+
         //call the "Call" method to initiate a outbount call
         $("#call").click(function(){
             var phone = $("#phone").val();
-            softphone.MakeCall(phone);
+            //customField String; Any application specific value like order id that will be passed back as a parameter in Status Callback 
+            var customField = "";
+            softphone.MakeCall(phone, OutboundResponse, customField);
         });
     });
 </script>
@@ -154,7 +165,9 @@ Steps to integrate the SDK:
 
     function Call() {
         var phone = $("#phone").val();
-        $.ippstncall.MakeCall(phone, OutboundResponse)
+        //customField String; Any application specific value like order id that will be passed back as a parameter in Status Callback 
+        var customField = "";
+        $.ippstncall.MakeCall(phone, OutboundResponse, customField)
     }
 
     function ToggleHold() {

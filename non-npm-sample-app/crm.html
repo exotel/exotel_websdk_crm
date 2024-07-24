@@ -64,7 +64,8 @@
     function Call() {
         var phone = $("#phone").val();
         //callback check
-        $.ippstncall.MakeCall(phone, OutboundResponse)
+        var customField = "test_call"
+        $.ippstncall.MakeCall(phone, OutboundResponse, customField)
     }
 
     function ToggleHold() {

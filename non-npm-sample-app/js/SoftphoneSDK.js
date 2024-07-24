@@ -235,9 +235,9 @@ class IPPstnCall {
 
     
 
-    MakeCallCallback(status, callback, number) {
+    MakeCallCallback(status, callback, number, customField) {
         if (status === "registered") {
-            this.MakeCallHelper(number, callback);
+            this.MakeCallHelper(number, callback, customField);
         }else {
             // Check if the error code exists in the errorDescriptions object
             if (errorDescriptions.hasOwnProperty(status)) {
@@ -256,14 +256,14 @@ class IPPstnCall {
         }
     }
 
-    MakeCall(number, callback) {
+    MakeCall(number, callback, customField) {
         $.ippstncall.checkClientStatus(function(status){
             //debugger
-            $.ippstncall.MakeCallCallback(status, callback, number);
+            $.ippstncall.MakeCallCallback(status, callback, number, customField);
         });
     }
 
-    MakeCallHelper(number, callback) {
+    MakeCallHelper(number, callback, customField) {
         let payload = {
             "customer_id": $.ic_user.customer_id,
             "app_id": $.ic_user.AppID,
@@ -271,6 +271,10 @@ class IPPstnCall {
             "user_id": $.ic_user.AppUserId,
             "account_region":"mumbai",
             "account_sid":"exotelveenotesting1m"
+        }
+
+        if (customField !== null && customField.trim() !== "") {
+            payload.custom_field = customField;
         }
 
         //make call
@@ -460,13 +464,13 @@ class SoftPhone {
 
     //if this method is called, this mean customer is using widgets tool, so we neet to pass message to iframe about call
     //direction
-    MakeCall(phoneno,callback){
+    MakeCall(phoneno,callback,customField){
         ippstncall.MakeCall(phoneno,(message,data) => {
             //this is need to update call direction text in iframe widgets
             var data = {"event" :"c2ccalltriggered" ,"phoneno": phoneno};
             document.getElementById('icwidget').contentWindow.postMessage(data, "*");
             callback(message,data);
-        });
+        }, customField);
     }
 
 
