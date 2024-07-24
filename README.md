@@ -1,10 +1,15 @@
-# WebSDK for IPPSTN Calling
-
+# WebSDK for IPPSTN Calling (Non NPM way)
 This project provides an easy-to-integrate SoftPhone SDK for web applications. The SDK allows developers to embed a fully functional softphone within their web projects which can be an inhouse webportal or a CRM Application, enabling seamless communication between agents and customers. The softphone supports both inbound and outbound calling, along with programmatically making calls . By following the simple integration steps provided, developers can quickly enhance their applications with powerful voice communication capabilities.
 
-## Getting Started
 
-Below are the steps to integrate the SDK:
+## 1. Using NPM (Recommended)
+
+Refer to the project inside npm-sample-app directory. This project is created using the Create React App utility.
+
+Refer to SDK documentation [here](https://github.com/ExoAbhishek/exotel-ip-calling-crm-websdk/tree/main)
+
+## 2. Non NPM way
+Steps to integrate the SDK:
 
 1. Download the WebSDK folder from this repository.
 2. Include the folder in wwwroot of your web project.
@@ -31,7 +36,7 @@ Below are the steps to integrate the SDK:
   ```
   
 
-## Below is complete code for a html file which integrates the websdk and Loads a UI for using the call Functionality.
+### Below is complete code for a html file which integrates the websdk and Loads a UI for using the call Functionality.
 
 ```
 <html>
@@ -60,17 +65,28 @@ Below are the steps to integrate the SDK:
         //"InitializeWidgets" method takes two parameters, first is your accesstoke and second is agent's username
         softphone.InitializeWidgets("ODZmYjJiOGItZGE4YS00NjQ5LWE4MmMtZGI5NzZiOTM0YzY0", "sumit");
 
+        // Check the `Outbound Response - Possible Errors and Success Format` section below for possible values
+        function OutboundResponse(error, data) {
+            if (error !== null){
+                alert("Error: " + error.description)
+            } else {
+                alert("Call initiated with Id: " + JSON.stringify(data.Data.CallSid))
+            }
+        }
+
         //call the "Call" method to initiate a outbount call
         $("#call").click(function(){
             var phone = $("#phone").val();
-            softphone.MakeCall(phone);
+            //customField String; Any application specific value like order id that will be passed back as a parameter in Status Callback 
+            var customField = "";
+            softphone.MakeCall(phone, OutboundResponse, customField);
         });
     });
 </script>
 </html>
 ```
 
-## Below is complete code for a html file which integrates the websdk and emits events to callback functions, this can be used to build your own UI and integrated the calling functionality via SDK.
+### Below is complete code for a html file which integrates the websdk and emits events to callback functions, this can be used to build your own UI and integrated the calling functionality via SDK.
 
 ```
 <!DOCTYPE html>
@@ -149,7 +165,9 @@ Below are the steps to integrate the SDK:
 
     function Call() {
         var phone = $("#phone").val();
-        $.ippstncall.MakeCall(phone, OutboundResponse)
+        //customField String; Any application specific value like order id that will be passed back as a parameter in Status Callback 
+        var customField = "";
+        $.ippstncall.MakeCall(phone, OutboundResponse, customField)
     }
 
     function ToggleHold() {
@@ -170,7 +188,7 @@ Below are the steps to integrate the SDK:
 </html>
 ```
 
-# Outbound Response - Possible Errors and Success Format
+## Outbound Response - Possible Errors and Success Format
 The following statuses and messages are thrown before initiating a call. They could be during SDK initialization, user registration, or errors related to call failures. You can handle these errors in the OutboundResponse function. 
 
 OutboundResponse(error, data)

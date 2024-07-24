@@ -1,0 +1,19 @@
+.notification {
+    margin-top: 20px;
+    padding: 10px;
+    color: black;
+    border-radius: 5px;
+    z-index: 1000;
+    top: 0em;
+    position: absolute;
+    min-width: 22em;
+    left: 40%;
+}
+
+.notification.info {
+    background-color: #90ee90;
+}
+
+.notification.danger {
+    background-color: #ee9090;
+}

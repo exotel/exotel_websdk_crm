@@ -1,20 +1,18 @@
 
-// version 1.3
+
 //***********voip config ******************* */
-var voipdomain = "voip.in1.exotel.com:5071";//veeno
+var voipdomain = "voip.in1.exotel.com:5071";//veeno 
 var voipdomain_sip = "voip.exotel.com";
 
-var baseurl = "https://integrationscore.mum1.exotel.com";
+var baseurl = "https://integrationscore.mum1.exotel.com"; 
+//baseurl = "http://localhost:8080";
 
 // ========================= start of widgets ====================================
 
 var widgetContainer = $(`<div style="box-shadow: -5px 0 5px rgba(0, 0, 0, 0.5);"> <div id="ic_cbcontainer"></div> <div id="ic_widgetcontainer"> </div> </div>`);
-// //
-// var widget = $(`<iframe style="height:95vh;border: none;"  scrolling="no"  width="380"
-//                     id="icwidget" src="https://integrationscore.us3.qaexotel.com/v2/integrations/widgets" title="description"></iframe>`);
-
+ 
 var widget = $(`<iframe style="height:95vh;border: none;"  scrolling="no"  width="380"
-                    id="icwidget" src="https://integrationscore.mum1.exotel.com/v2/integrations/widgets" title="description"></iframe>`);
+                    id="icwidget" src="http://localhost:8080/v2/integrations/widgets" title="description"></iframe>`);
 
 
 
@@ -23,16 +21,16 @@ var clickevents;
 class widgets {
     constructor(showtoggle, _clickevents) {
 
-        widgetContainer.appendTo('#callwidgetpanel');
+        widgetContainer.appendTo('#callwidgetpanel'); 
         widget.appendTo('#ic_widgetcontainer');
 
-        clickevents = _clickevents;
+        clickevents = _clickevents; 
         $('#sip-enabled').change(function () {
             if (this.checked) {
                 widget.show();
                 if (clickevents !== null) {
                     clickevents("register");
-                }
+                } 
             } else {
                 widget.hide();
                 if (clickevents !== null) {
@@ -62,14 +60,14 @@ class widgets {
                 iframe.contentWindow.postMessage(creds, '*');
             });
         }
-
-    }
+         
+    } 
     RegisterPostmessageReceiver() {
         window.addEventListener("message", receiveMessage, false);
         function receiveMessage(event) {
             console.log("event received from " + event.origin);
-            console.log("message received in parent window --> " + event.data + event.origin);
-            if (event.origin !== "https://integrationscore.us3.qaexotel.com"){
+            console.log("message received in parent window --> " + event.data + event.origin); 
+            if (event.origin !== "https://integrationscore.mum1.exotel.com"){
                 console.log("not a authorized domain!");
                 // return;
             }
@@ -156,7 +154,7 @@ class IPPstnCall {
         _loggedinuserid = loggedinuserid;
         this.PullUserDetailsWithSipInfo();
 
-        exWebClient = new exotelSDK.ExotelWebClient();
+        exWebClient = new exotelSDK.ExotelWebClient(); 
         console.log(sipAccountInfo);
         exWebClient.initWebrtc(sipAccountInfo, this.RegisterEventCallBack, this.CallListenerCallback, this.SessionCallback)
 
@@ -170,6 +168,15 @@ class IPPstnCall {
 
     UnRegisterDevice() {
         exWebClient.unregister();
+    }
+
+    checkClientStatus(callback) {
+        //debugger
+        console.log("Inside webSDK checkClientStatus");
+        exWebClient.checkClientStatus(function(status) {
+            console.log("SDK Status " + status);
+            callback(status);
+        });
     }
 
     CallListenerCallback(callObj, eventType, sipInfo) {
@@ -200,15 +207,15 @@ class IPPstnCall {
         //make a http call to get user details for "_loggedinuserid" and use accesstoken for auth
         // var sipInfo = JSON.parse(phone)[0]
         sipAccountInfo = {
-            'userName': $.ic_user.SipId.split(':')[1],
-            'authUser': $.ic_user.SipId.split(':')[1],
-            'sipdomain': $.ic_app.Data.ExotelAccountSid + "." + voipdomain_sip,
-            'domain': voipdomain,
-            'displayname': $.ic_user.ExotelUserName,
-            'secret': $.ic_user.SipSecret,
-            'port': "5070",
-            'security': "wss",
-            'endpoint': "wss"
+            'userName': $.ic_user.SipId.split(':')[1], 
+            'authUser': $.ic_user.SipId.split(':')[1], 
+            'sipdomain': $.ic_app.Data.ExotelAccountSid + "." + voipdomain_sip, 
+            'domain': voipdomain,  
+            'displayname': $.ic_user.ExotelUserName, 
+            'secret': $.ic_user.SipSecret, 
+            'port': "5070", 
+            'security': "wss", 
+            'endpoint': "wss" 
         };
         console.log("------------------sipAccountInfo------------------");
         console.log(sipAccountInfo);
@@ -226,19 +233,48 @@ class IPPstnCall {
         }
     }
 
-    checkClientStatus(callback) {
-        exWebClient.checkClientStatus(function(status) {
-            console.log("SDK Status " + status);
-            callback(status);
+    
+
+    MakeCallCallback(status, callback, number, customField) {
+        if (status === "registered") {
+            this.MakeCallHelper(number, callback, customField);
+        }else {
+            // Check if the error code exists in the errorDescriptions object
+            if (errorDescriptions.hasOwnProperty(status)) {
+                // Get the description based on the status code
+                var description = errorDescriptions[status];
+            } else {
+                // If the error code doesn't exist, default to "Unknown" and log a message
+                console.log("Unknown status code:", status);
+                var description = "unknown";
+            }
+            var errorData = {
+                    "code": status,
+                    "description": description
+                    }
+            callback(errorData, null);
+        }
+    }
+
+    MakeCall(number, callback, customField) {
+        $.ippstncall.checkClientStatus(function(status){
+            //debugger
+            $.ippstncall.MakeCallCallback(status, callback, number, customField);
         });
     }
 
-    MakeCall(number, callback) {
+    MakeCallHelper(number, callback, customField) {
         let payload = {
             "customer_id": $.ic_user.customer_id,
             "app_id": $.ic_user.AppID,
             "to": number,
-            "user_id": $.ic_user.AppUserId
+            "user_id": $.ic_user.AppUserId,
+            "account_region":"mumbai",
+            "account_sid":"exotelveenotesting1m"
+        }
+
+        if (customField !== null && customField.trim() !== "") {
+            payload.custom_field = customField;
         }
 
         //make call
@@ -287,7 +323,7 @@ class IPPstnCall {
         });
     }
 
-    toggleHoldButton() {
+    toggleHoldButton() { 
         if (call) {
             call.HoldToggle();
             if (_SoftPhoneCallListenerCallback != null) {
@@ -297,7 +333,7 @@ class IPPstnCall {
     }
 
     toggleMuteButton() {
-        debugger;
+        //debugger;
         if (call) {
             call.Mute();
             _SoftPhoneCallListenerCallback("mutetoggle", call);
@@ -335,14 +371,14 @@ class IPPstnCall {
         });
     }
 
-    LoadUserDetails(userid){
+    LoadUserDetails(userid){ 
         //load userdetails
         $.ajax({
             url: baseurl + '/v2/integrations/usermapping?user_id=' +  userid,
             dataType: 'json',
             headers: {"Authorization":  $.ic_authtoken , 'content-type': 'application/json'},
             async: false,
-            success: function(data) {
+            success: function(data) { 
                 $.ic_user = data.Data;
                 const key = '6368616e676520746869732070617373776f726420746f206120736563726574';
                 const ciphertext = $.ic_user.SipSecret;
@@ -426,42 +462,15 @@ class SoftPhone {
 
     }
 
-    MakeCallCallback(status, callback, number) {
-        if (status === "registered") {
-            this.MakeCallHelper(number, callback);
-        }else {
-            // Check if the error code exists in the errorDescriptions object
-            if (errorDescriptions.hasOwnProperty(status)) {
-                // Get the description based on the status code
-                var description = errorDescriptions[status];
-            } else {
-                // If the error code doesn't exist, default to "Unknown" and log a message
-                console.log("Unknown status code:", status);
-                var description = "unknown";
-            }
-            var errorData = {
-                    "code": status,
-                    "description": description
-                    }
-            callback(errorData, null);
-        }
-    }
-  
-    MakeCall(number, callback) {
-        ippstncall.checkClientStatus(function(status){
-            $.softphone.MakeCallCallback(status, callback, number);
-        });
-    }
-
     //if this method is called, this mean customer is using widgets tool, so we neet to pass message to iframe about call
     //direction
-    MakeCallHelper(phoneno,callback){
+    MakeCall(phoneno,callback,customField){
         ippstncall.MakeCall(phoneno,(message,data) => {
             //this is need to update call direction text in iframe widgets
             var data = {"event" :"c2ccalltriggered" ,"phoneno": phoneno};
             document.getElementById('icwidget').contentWindow.postMessage(data, "*");
             callback(message,data);
-        });
+        }, customField);
     }
 
 
@@ -495,7 +504,7 @@ class SoftPhone {
             }
         });
     }
-    LoadUserDetails(userid){
+    LoadUserDetails(userid){ 
         //load userdetails
         $.ajax({
             url: baseurl + '/v2/integrations/usermapping?user_id=' +  userid,
@@ -503,6 +512,7 @@ class SoftPhone {
             async: false,
             headers: {"Authorization":  $.ic_authtoken , 'content-type': 'application/json'},
             success: function(data) {
+                //debugger;
                 $.ic_user = data.Data;
                 const key = '6368616e676520746869732070617373776f726420746f206120736563726574';
                 const ciphertext = $.ic_user.SipSecret;
@@ -518,5 +528,5 @@ class SoftPhone {
             }
         });
     }
-}
+} 
 //============================= end of softphone ======================================
