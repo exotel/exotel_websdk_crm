@@ -1,6 +1,6 @@
 # WebSDK for IPPSTN Calling (Archived)
 
-This repository is no longer maintained. The updated npm repository is available [here]([url](https://github.com/exotel/exotel-ip-calling-crm-websdk))
+This repository is no longer maintained. The updated npm repository is available [here](https://github.com/exotel/exotel-ip-calling-crm-websdk)
 ## Note that this archival will not affect businesses already using this version.
 
 
